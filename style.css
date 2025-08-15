@@ -13,6 +13,13 @@ button {
     font-size: 1em;
 }
 
-video.in-pip {
-  box-shadow: 0 0 0 5px red;
+@media (display-mode: picture-in-picture) {
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  h1, button {
+    display: none;
+  }
 }

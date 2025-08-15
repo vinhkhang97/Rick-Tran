@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floating Picture-in-Picture</title>
+    <title>Document Picture-in-Picture</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Floating Picture-in-Picture</h1>
-    <video
-      src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4"
-      id="video"
-      muted
-      controls
-      loop
-      width="300"></video>
+    <div id="pip-container">
+        <h1>Floating Picture-in-Picture</h1>
+        <video
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4"
+          id="video"
+          muted
+          controls
+          loop
+          width="300"></video>
+    </div>
 
-    <button id="pip-button" disabled>Toggle PiP</button>
-    <pre id="log"></pre>
+    <button id="doc-pip-button">Toggle Document PiP</button>
 
     <script src="script.js"></script>
 </body>
