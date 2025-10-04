@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const data = await response.json();
-
+        
         // Use the prompt state *before* the command ran for the history display
         const promptForHistory = isInteractive ? '' : `[${cwd}]$ `;
-
+        
         if (command.trim() !== '') {
             output.innerHTML += `<div class="command-entry"><span class="prompt">${escapeHtml(promptForHistory)}</span>${escapeHtml(command)}</div>`;
             if (data.output) {
