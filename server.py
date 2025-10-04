@@ -1,3 +1,4 @@
+#!/home/t_FXW1AA001A_PR/Environment/script/python/Python-3.8.9/bin/python3.8
 import http.server
 import json
 import subprocess
@@ -18,10 +19,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CERTFILE = os.path.join(SCRIPT_DIR, 'server.pem')
 
 # --- PTY Setup ---
-# Create a pseudo-terminal
 master_fd, slave_fd = pty.openpty()
 
-# Start an interactive csh process in the pseudo-terminal
 pty_process = subprocess.Popen(
     ['csh', '-i'],
     preexec_fn=os.setsid,
