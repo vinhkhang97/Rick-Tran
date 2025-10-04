@@ -1,0 +1,100 @@
+/*
+ * A modern, clean, and dark theme for a web console,
+ * inspired by popular code editors.
+ */
+
+body {
+    background-color: #282c34; /* A dark, muted blue-gray */
+    color: #abb2bf; /* A soft, light gray for text */
+    font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+#terminal {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #3e4451; /* A slightly lighter border for definition */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* A subtle shadow for depth */
+}
+
+#output {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #21252b; /* A slightly darker background for the output area */
+    scrollbar-width: thin;
+    scrollbar-color: #61afef #21252b; /* A nice blue for the scrollbar */
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari) */
+#output::-webkit-scrollbar {
+    width: 10px;
+}
+#output::-webkit-scrollbar-track {
+    background: #21252b;
+}
+#output::-webkit-scrollbar-thumb {
+    background-color: #4f5666;
+    border-radius: 5px;
+    border: 2px solid #21252b;
+}
+#output::-webkit-scrollbar-thumb:hover {
+    background-color: #61afef;
+}
+
+#input-line {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #282c34;
+    border-top: 1px solid #3e4451;
+}
+
+#prompt {
+    color: #61afef; /* A bright blue for the prompt */
+    margin-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+#command-input {
+    background-color: transparent;
+    border: none;
+    color: #dcdfe4; /* A brighter text color for the input */
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    width: 100%;
+    caret-color: #e06c75; /* A contrasting red for the caret */
+}
+
+/* Styling for the content inside the output area */
+.command-entry {
+    color: #c678dd; /* A vibrant purple for previously entered commands */
+}
+.command-entry .prompt {
+    color: #61afef; /* The same blue as the live prompt */
+}
+
+.output-entry {
+    color: #abb2bf; /* Standard text color for command output */
+    padding-top: 4px;
+    padding-bottom: 12px; /* A bit of space after each command */
+}
+
+.completions {
+    color: #98c379; /* A pleasant green for autocomplete suggestions */
+    padding-top: 8px;
+    padding-bottom: 8px;
+    line-height: 1.6;
+    white-space: normal; /* Allow completions to wrap */
+}

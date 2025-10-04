@@ -1,0 +1,4 @@
+# Ignore sensitive files and runtime artifacts
+server.pem
+server.log
+jules-scratch/
