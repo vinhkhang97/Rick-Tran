@@ -2,24 +2,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const output = document.getElementById('output');
     const commandInput = document.getElementById('command-input');
     const prompt = document.getElementById('prompt');
-
     let cwd = '~';
     let commandHistory = [];
     let historyIndex = -1;
     let lastCompletionText = null;
     let lastCompletions = [];
-    let isInteractive = false; // New state to track if a sub-shell is active
+    let isInteractive = false;
+    let interactivePrompt = null; // Will hold the prompt from the interactive tool
 
-    // This function now shows or hides the prompt based on the interactive state
     const updatePrompt = () => {
-        const promptContainer = document.getElementById('input-line');
-        if (isInteractive) {
-            // Hide the prompt container when in an interactive sub-shell
-            prompt.style.display = 'none';
+        prompt.style.display = 'inline'; // Always show the prompt
+        if (isInteractive && interactivePrompt) {
+            prompt.textContent = interactivePrompt; // e.g., "innovus 1> "
+        } else if (isInteractive) {
+            prompt.textContent = '> '; // Fallback for interactive sessions
         } else {
-            // Show the prompt container for the main shell
-            prompt.style.display = 'inline';
-            prompt.textContent = `[${cwd}]$ `;
+            prompt.textContent = `[${cwd}]$ `; // Main shell prompt
         }
     };
 
@@ -36,10 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const data = await response.json();
-        
-        // Use the prompt state *before* the command ran for the history display
-        const promptForHistory = isInteractive ? '' : `[${cwd}]$ `;
-        
+        const promptForHistory = prompt.textContent;
+
         if (command.trim() !== '') {
             output.innerHTML += `<div class="command-entry"><span class="prompt">${escapeHtml(promptForHistory)}</span>${escapeHtml(command)}</div>`;
             if (data.output) {
@@ -47,9 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Update state for the *next* prompt based on the server's response
         cwd = data.cwd;
         isInteractive = data.interactive;
+        interactivePrompt = data.interactive_prompt;
+        
         updatePrompt();
         output.scrollTop = output.scrollHeight;
     };
@@ -70,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentInput = commandInput.value;
 
         if (isInteractive) {
-            // --- In-Tool Tab Completion ---
             const response = await fetch('/in-tool-complete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -81,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 commandInput.value = data.completed_text;
             }
         } else {
-            // --- Standard Shell Completion ---
             const textToComplete = currentInput.split(' ').pop();
             if (currentInput === lastCompletionText && lastCompletions.length > 1) {
                 output.innerHTML += `<div class="completions">${lastCompletions.join('&nbsp;&nbsp;')}</div>`;
@@ -162,9 +157,59 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/'/g, "&#39;");
     };
 
-    // Set initial CWD and prompt by sending a harmless empty command
+    // Set initial CWD and prompt
     executeCommand('');
+
+    // --- Picture-in-Picture Logic ---
+    const pipButton = document.getElementById('pip-button');
+    const terminalContainer = document.getElementById('terminal');
+    const mainBody = document.body;
+
+    if ('documentPictureInPicture' in window) {
+        pipButton.addEventListener('click', async () => {
+            try {
+                const pipWindow = await window.documentPictureInPicture.requestWindow({
+                    width: terminalContainer.clientWidth,
+                    height: terminalContainer.clientHeight,
+                });
+
+                // Copy stylesheets to the new window
+                [...document.styleSheets].forEach((styleSheet) => {
+                    try {
+                        const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
+                        const style = document.createElement('style');
+                        style.textContent = cssRules;
+                        pipWindow.document.head.appendChild(style);
+                    } catch (e) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.type = styleSheet.type;
+                        link.href = styleSheet.href;
+                        pipWindow.document.head.appendChild(link);
+                    }
+                });
+
+                // Move the terminal to the new window
+                pipWindow.document.body.append(terminalContainer);
+
+                // When the PiP window is closed, move the terminal back
+                pipWindow.addEventListener('pagehide', () => {
+                    mainBody.append(terminalContainer);
+                });
+
+            } catch (error) {
+                console.error('Failed to enter Picture-in-Picture mode:', error);
+            }
+        });
+    } else {
+        // If the API is not supported, disable the button and inform the user.
+        pipButton.disabled = true;
+        pipButton.title = 'Document Picture-in-Picture is not supported by your browser';
+        pipButton.style.cursor = 'not-allowed';
+        pipButton.style.opacity = '0.5';
+        console.log('Document Picture-in-Picture API is not supported.');
+    }
 });
