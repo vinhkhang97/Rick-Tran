@@ -1,67 +1,97 @@
 /*
- * A modern, clean, and dark theme for a web console,
- * inspired by popular code editors.
+ * A modern, beautiful, and dark theme for a web console,
+ * inspired by popular coding terminals with a futuristic glow.
  */
 
 body {
-    background-color: #282c34; /* A dark, muted blue-gray */
-    color: #abb2bf; /* A soft, light gray for text */
+    background-color: #1a1b26; /* A deep, dark blue, the base of the theme */
+    color: #a9b1d6; /* A soft, readable off-white for general text */
     font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
-    font-size: 14px;
+    font-size: 16px;
     margin: 0;
     padding: 20px;
     height: 100vh;
     box-sizing: border-box;
+    /* Add a subtle background pattern */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
 }
 
 #terminal {
+    position: relative; /* Needed for absolute positioning of the PiP button */
     height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #3e4451; /* A slightly lighter border for definition */
-    border-radius: 8px;
+    background-color: rgba(20, 21, 31, 0.85); /* A semi-transparent terminal background */
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* A subtle shadow for depth */
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.15), 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(122, 162, 247, 0.3);
+    backdrop-filter: blur(5px); /* Frosted glass effect */
+}
+
+#pip-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 10;
+    background: none;
+    border: 1px solid rgba(122, 162, 247, 0.4);
+    color: #a9b1d6;
+    font-size: 16px;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+#pip-button:hover {
+    background-color: rgba(122, 162, 247, 0.2);
+    color: #bb9af7;
+    border-color: rgba(187, 154, 247, 0.6);
 }
 
 #output {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 15px;
+    padding: 20px;
     white-space: pre-wrap;
     word-wrap: break-word;
-    background-color: #21252b; /* A slightly darker background for the output area */
-    scrollbar-width: thin;
-    scrollbar-color: #61afef #21252b; /* A nice blue for the scrollbar */
+    /* Give text a subtle glow */
+    text-shadow: 0 0 2px rgba(169, 177, 214, 0.4);
 }
 
-/* Custom scrollbar for Webkit browsers (Chrome, Safari) */
+/* Custom scrollbar for a more integrated look */
 #output::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 #output::-webkit-scrollbar-track {
-    background: #21252b;
+    background: transparent;
 }
 #output::-webkit-scrollbar-thumb {
-    background-color: #4f5666;
-    border-radius: 5px;
-    border: 2px solid #21252b;
+    background-color: rgba(122, 162, 247, 0.4);
+    border-radius: 6px;
+    border: 3px solid transparent;
+    background-clip: content-box;
 }
 #output::-webkit-scrollbar-thumb:hover {
-    background-color: #61afef;
+    background-color: rgba(122, 162, 247, 0.7);
 }
 
 #input-line {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
-    background-color: #282c34;
-    border-top: 1px solid #3e4451;
+    padding: 15px 20px;
+    background-color: rgba(30, 31, 41, 0.9);
+    border-top: 1px solid rgba(122, 162, 247, 0.3);
 }
 
 #prompt {
-    color: #61afef; /* A bright blue for the prompt */
-    margin-right: 10px;
+    color: #bb9af7; /* A vibrant lilac for the prompt */
+    text-shadow: 0 0 5px rgba(187, 154, 247, 0.5);
+    margin-right: 12px;
     white-space: nowrap;
     font-weight: bold;
 }
@@ -69,32 +99,48 @@ body {
 #command-input {
     background-color: transparent;
     border: none;
-    color: #dcdfe4; /* A brighter text color for the input */
+    color: #7dcfff; /* A bright cyan for user input */
     font-family: inherit;
     font-size: inherit;
     outline: none;
     width: 100%;
-    caret-color: #e06c75; /* A contrasting red for the caret */
+    text-shadow: 0 0 5px rgba(125, 207, 255, 0.5);
+    caret-color: #ff9e64; /* A bright orange for the caret */
+}
+#command-input:focus {
+    animation: caret-glow 1.5s ease-in-out infinite alternate;
 }
 
-/* Styling for the content inside the output area */
+@keyframes caret-glow {
+    from { box-shadow: 0 0 8px rgba(255, 158, 100, 0.3); }
+    to { box-shadow: 0 0 12px rgba(255, 158, 100, 0.8); }
+}
+
+
+/* --- Content Styling --- */
+
 .command-entry {
-    color: #c678dd; /* A vibrant purple for previously entered commands */
+    color: #7dcfff; /* Cyan for previously entered commands */
 }
 .command-entry .prompt {
-    color: #61afef; /* The same blue as the live prompt */
+    color: #bb9af7; /* Lilac for the prompt part of the history */
 }
 
 .output-entry {
-    color: #abb2bf; /* Standard text color for command output */
-    padding-top: 4px;
-    padding-bottom: 12px; /* A bit of space after each command */
+    color: #a9b1d6; /* Standard output text color */
+    padding-top: 5px;
+    padding-bottom: 15px;
 }
 
 .completions {
-    color: #98c379; /* A pleasant green for autocomplete suggestions */
-    padding-top: 8px;
-    padding-bottom: 8px;
-    line-height: 1.6;
-    white-space: normal; /* Allow completions to wrap */
+    color: #9ece6a; /* A fresh green for autocomplete suggestions */
+    padding: 10px 0;
+    line-height: 1.7;
+    white-space: normal;
+    text-shadow: 0 0 4px rgba(158, 206, 106, 0.4);
+}
+
+/* Add a welcome message style */
+.output-entry:first-child {
+    color: #e0af68; /* A warm gold for a welcome/initial message */
 }
